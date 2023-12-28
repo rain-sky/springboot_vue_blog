@@ -47,6 +47,12 @@ public class LoginController {
         return systemLoginService.login(user);
     }
 
+    @PostMapping("/user/logout")
+    @ApiOperation("用户登出")
+    public ResponseResult logout(){
+        return systemLoginService.logout();
+    }
+
     /**
      * {
      * 	"code":200,

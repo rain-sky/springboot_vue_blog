@@ -8,6 +8,7 @@ import com.cern.exception.SystemException;
 import com.cern.service.SystemLoginService;
 import com.cern.utils.JwtUtil;
 import com.cern.utils.RedisCache;
+import com.cern.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -49,5 +50,12 @@ public class SystemLoginServiceImpl implements SystemLoginService {
         HashMap<String, String> map = new HashMap<>();
         map.put("token",jwt);
         return ResponseResult.okResult(map);
+    }
+
+    @Override
+    public ResponseResult logout() {
+        Long userId = SecurityUtils.getUserId();
+        redisCache.deleteObject("login:" + userId);
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }
 }
