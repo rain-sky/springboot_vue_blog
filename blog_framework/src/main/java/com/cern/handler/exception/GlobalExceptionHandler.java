@@ -5,6 +5,7 @@ import com.cern.enums.AppHttpCodeEnum;
 import com.cern.exception.SystemException;
 import com.cern.exception.TestException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -22,6 +23,12 @@ public class GlobalExceptionHandler {
         log.error("出现了异常! {}",e);
         //从异常对象中获取提示信息封装，然后返回。ResponseResult是我们写的类
         return ResponseResult.errorResult(e.getCode(),e.getMsg());
+    }
+
+    // 处理SpringSecurity的权限异常，当用户无权限进行操作的时候进行处理
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseResult handleAccessDeniedException(AccessDeniedException e) {
+        return ResponseResult.errorResult(AppHttpCodeEnum.NO_OPERATOR_AUTH.getCode(),e.getMessage());//枚举值是500
     }
 
     // 测试用异常

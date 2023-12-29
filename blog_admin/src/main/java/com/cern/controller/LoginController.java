@@ -59,7 +59,7 @@ public class LoginController {
      * 	"data":{
      * 		"permissions":[
      * 			"system:user:list",
-     *             "system:role:list",
+     *          "system:role:list",
      * 			"system:menu:list",
      * 			"system:user:query",
      * 			"system:user:add"
@@ -86,7 +86,7 @@ public class LoginController {
         UserInfoVo userInfoVo = BeanCopyUtils.copyBean(loginUser, UserInfoVo.class);
         // 获取用户角色
         List<String> hasRole = roleService.selectRoleKeyByUserId(loginUser.getId());
-        // 获取用户菜单列表
+        // 获取用户权限perms列表
         List<String> hasMenu = menuService.selectPermsByUserId(loginUser.getId());
         // 封装传输对象
         AdminUserInfoVo adminUserInfoVo = new AdminUserInfoVo(hasMenu, hasRole, userInfoVo);
@@ -97,7 +97,7 @@ public class LoginController {
     @ApiOperation("获取用户所有动态路由组件")
     public ResponseResult getRouters(){
         Long userId = SecurityUtils.getUserId();
-        // 获取菜单权限树
+        // 获取动态路由树
         List<Menu> menus = menuService.selectRouterMenuTreeByUserId(userId);
         return ResponseResult.okResult(new RoutersVo(menus));
     }

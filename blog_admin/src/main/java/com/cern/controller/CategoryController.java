@@ -15,6 +15,7 @@ import com.cern.utils.WebUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -73,8 +74,9 @@ public class CategoryController {
         return ResponseResult.okResult();
     }
 
-    //------------------------------分类导出excel------------------------------------
+    //----------------------------------------分类导出-----------------------------------------
     @GetMapping("/export")
+    @PreAuthorize("@permissionServiceImpl.hasPermission('content:category:export')") // 使用自己鉴权方法
     //注意返回值类型是void
     public void export(HttpServletResponse response){
         try {

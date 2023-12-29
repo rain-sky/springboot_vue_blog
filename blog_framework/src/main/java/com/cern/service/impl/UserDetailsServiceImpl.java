@@ -1,14 +1,18 @@
 package com.cern.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.cern.constants.SystemConstants;
 import com.cern.domain.LoginUser;
 import com.cern.domain.entity.User;
+import com.cern.mapper.MenuMapper;
 import com.cern.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Objects;
 
 
@@ -18,6 +22,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private MenuMapper menuMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -30,8 +37,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if(Objects.isNull(user)){
             throw new RuntimeException("用户不存在");//后期会对异常进行统一处理
         }
-        //TODO 查询权限信息，并封装
 
-        return new LoginUser(user);
+        // TODO 查询权限信息，并封装，如果是后台用户，才需要查询权限，也就是只对后台用户做权限校验
+        if(user.getType().equals(SystemConstants.IS_ADMIN)){
+            //根据用户id查询权限关键字，即list是权限信息的集合
+            List<String> list = menuMapper.selectPermsByOtherUserId(user.getId());
+            return new LoginUser(user,list);
+        }
+        return new LoginUser(user,null);
     }
 }

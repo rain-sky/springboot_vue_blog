@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.cern.domain.ResponseResult;
 import com.cern.domain.dto.AddArticleDto;
 import com.cern.domain.entity.Article;
+import com.cern.domain.vo.ArticleByIdVo;
+import com.cern.domain.vo.PageVo;
 
 /**
  * 文章表(Article)表服务接口
@@ -24,4 +26,13 @@ public interface ArticleService extends IService<Article> {
 
     // 后台新增博文方法
     ResponseResult add(AddArticleDto articleDto);
+
+    // 后台(文章管理)-分页查询文章
+    PageVo selectArticlePage(Article article, Integer pageNum, Integer pageSize);
+
+    //修改文章-①根据文章id查询对应的文章
+    ArticleByIdVo getInfo(Long id);
+
+    //修改文章-②然后才是修改文章
+    void edit(AddArticleDto article);
 }
