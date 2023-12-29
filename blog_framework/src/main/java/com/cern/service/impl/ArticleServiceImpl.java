@@ -126,9 +126,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
     /**
      * *****************************************系统后台方法*************************************
+     * 新增文章的方法必须进行事务处理，如果文章与其对应的标签关系新增失败，那么显然这篇文章的新增任务也应当失败
+     * 保证事务的正确性
      */
     @Override
-    @Transactional //声明式事务
+    @Transactional
     public ResponseResult add(AddArticleDto articleDto) {
         // 保存文章信息
         Article article = BeanCopyUtils.copyBean(articleDto, Article.class);

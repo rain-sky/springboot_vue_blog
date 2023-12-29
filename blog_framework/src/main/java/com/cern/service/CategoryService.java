@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.cern.domain.ResponseResult;
 import com.cern.domain.entity.Category;
 import com.cern.domain.vo.CategoryVo;
+import com.cern.domain.vo.PageVo;
 
 import java.util.List;
 
@@ -20,5 +21,10 @@ public interface CategoryService extends IService<Category> {
 
     // 后台查询方法
     List<CategoryVo> listAllCategory();
+
+    //分页查询分类列表
+    PageVo selectCategoryPage(Category category, Integer pageNum, Integer pageSize);
+
+
 }
 

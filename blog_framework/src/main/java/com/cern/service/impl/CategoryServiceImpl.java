@@ -1,20 +1,24 @@
 package com.cern.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cern.constants.SystemConstants;
 import com.cern.domain.ResponseResult;
 import com.cern.domain.entity.Article;
 import com.cern.domain.entity.Category;
 import com.cern.domain.vo.CategoryVo;
+import com.cern.domain.vo.PageVo;
 import com.cern.mapper.CategoryMapper;
 import com.cern.service.ArticleService;
 import com.cern.service.CategoryService;
 import com.cern.utils.BeanCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -51,7 +55,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         return ResponseResult.okResult(categoryVos);
     }
 
-    // 写博文页面查询分类列表
+    // 后台：写博文页面查询分类列表
     @Override
     public List<CategoryVo> listAllCategory() {
         // 查询正常分类集合
@@ -60,6 +64,26 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         List<Category> list = this.list(wrapper);
         List<CategoryVo> categoryVos = BeanCopyUtils.copyBeanList(list, CategoryVo.class);
         return categoryVos;
+    }
+
+    // 后台：查询分类列表
+    @Override
+    public PageVo selectCategoryPage(Category category, Integer pageNum, Integer pageSize) {
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper();
+
+        queryWrapper.like(StringUtils.hasText(category.getName()),Category::getName, category.getName());
+        queryWrapper.eq(Objects.nonNull(category.getStatus()),Category::getStatus, category.getStatus());
+
+        Page<Category> page = new Page<>(pageNum,pageSize);
+        page(page,queryWrapper);
+
+        //转换成VO
+        List<Category> categories = page.getRecords();
+
+        PageVo pageVo = new PageVo();
+        pageVo.setTotal(page.getTotal());
+        pageVo.setRows(categories);
+        return pageVo;
     }
 }
 
