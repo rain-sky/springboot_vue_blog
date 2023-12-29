@@ -63,4 +63,8 @@ public class SystemConstants {
      * 权限类型，目录
      */
     public static final Long PARENT_MENU_TYPE = 0L;
+    /**
+     * 正常状态
+     */
+    public static final String NORMAL = "0";
 }

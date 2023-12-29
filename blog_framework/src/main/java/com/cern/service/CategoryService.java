@@ -3,6 +3,9 @@ package com.cern.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cern.domain.ResponseResult;
 import com.cern.domain.entity.Category;
+import com.cern.domain.vo.CategoryVo;
+
+import java.util.List;
 
 /**
  * 分类表(Category)表服务接口
@@ -12,6 +15,10 @@ import com.cern.domain.entity.Category;
  */
 public interface CategoryService extends IService<Category> {
 
+    // 前台查询方法
     ResponseResult getCategoryList();
+
+    // 后台查询方法
+    List<CategoryVo> listAllCategory();
 }
 

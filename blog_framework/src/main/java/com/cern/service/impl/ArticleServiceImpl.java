@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cern.constants.SystemConstants;
 import com.cern.domain.ResponseResult;
+import com.cern.domain.dto.AddArticleDto;
 import com.cern.domain.entity.Article;
+import com.cern.domain.entity.ArticleTag;
 import com.cern.domain.vo.ArticleDetailVo;
 import com.cern.domain.vo.ArticleListVo;
 import com.cern.domain.vo.HotArticleVo;
@@ -13,15 +15,18 @@ import com.cern.domain.vo.PageVo;
 import com.cern.enums.AppHttpCodeEnum;
 import com.cern.mapper.ArticleMapper;
 import com.cern.service.ArticleService;
+import com.cern.service.ArticleTagService;
 import com.cern.service.CategoryService;
 import com.cern.utils.BeanCopyUtils;
 import com.cern.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 文章表(Article)表服务实现类
@@ -40,6 +45,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Autowired
     private RedisCache redisCache;
+
+    @Autowired
+    private ArticleTagService articleTagService;
 
 
     // 测试接口，返回所有文章
@@ -111,10 +119,28 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public ResponseResult updateViewCount(Long id) {
-        //更新redis中的浏览量，对应文章id的viewCount浏览量。article:viewCount是ViewCountRunner类里面写的
+        //更新redis中的浏览量，对应文章id的viewCount浏览量。
         //用户每从mysql根据文章id查询一次浏览量，那么redis的浏览量就增加1
         redisCache.incrementCacheMapValue("article:viewCount",id.toString(),1);
         return ResponseResult.okResult();
     }
+    /**
+     * *****************************************系统后台方法*************************************
+     */
+    @Override
+    @Transactional //声明式事务
+    public ResponseResult add(AddArticleDto articleDto) {
+        // 保存文章信息
+        Article article = BeanCopyUtils.copyBean(articleDto, Article.class);
+        save(article);
+        // 保存文章标签映射关系
+        List<Long> tags = articleDto.getTags();
+        List<ArticleTag> collect = tags.stream()
+                .map(tag -> new ArticleTag(article.getId(), tag))
+                .collect(Collectors.toList());
+        articleTagService.saveBatch(collect);
+        return ResponseResult.okResult();
+    }
 }
+
 

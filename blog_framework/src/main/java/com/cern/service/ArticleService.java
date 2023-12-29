@@ -2,6 +2,7 @@ package com.cern.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cern.domain.ResponseResult;
+import com.cern.domain.dto.AddArticleDto;
 import com.cern.domain.entity.Article;
 
 /**
@@ -20,4 +21,7 @@ public interface ArticleService extends IService<Article> {
     ResponseResult getArticleDetail(Long id);
     //根据文章id增加浏览量
     ResponseResult updateViewCount(Long id);
+
+    // 后台新增博文方法
+    ResponseResult add(AddArticleDto articleDto);
 }

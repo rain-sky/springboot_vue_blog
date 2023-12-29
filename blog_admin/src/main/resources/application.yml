@@ -35,7 +35,7 @@ mybatis-plus:
       id-type: auto
 
 # 配置七牛云权限密钥与上传的空间
-#qi-niu-oss:
-#  accessKey: kCQHwzjmeg6evh1NoX1PzuqMLD1Ekr3pk8CdCZt7
-#  secretKey: 3UrTuJqNMU5kXj2bFjnNoTkaXnJMd1PV6EMJKfwq
-#  bucket: lui-blog
+qi-niu-oss:
+  accessKey: kCQHwzjmeg6evh1NoX1PzuqMLD1Ekr3pk8CdCZt7
+  secretKey: 3UrTuJqNMU5kXj2bFjnNoTkaXnJMd1PV6EMJKfwq
+  bucket: lui-blog

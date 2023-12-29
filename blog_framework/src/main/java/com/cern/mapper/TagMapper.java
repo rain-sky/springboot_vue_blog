@@ -2,6 +2,7 @@ package com.cern.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cern.domain.entity.Tag;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -12,6 +13,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TagMapper extends BaseMapper<Tag> {
-
+    int myUpdateById(@Param("id") Long id, @Param("flag") int flag);
 }
 
