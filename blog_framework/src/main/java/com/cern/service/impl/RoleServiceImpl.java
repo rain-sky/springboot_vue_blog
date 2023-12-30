@@ -1,8 +1,10 @@
 package com.cern.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cern.constants.SystemConstants;
 import com.cern.domain.ResponseResult;
 import com.cern.domain.entity.Role;
 import com.cern.domain.entity.RoleMenu;
@@ -84,5 +86,26 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
                 .collect(Collectors.toList());
         roleMenuService.saveBatch(roleMenuList);
     }
+
+    @Override
+    @Transactional // 声明式事务，若新增角色与新增角色权限映射一方失败，则事务不成功
+    public void updateRole(Role role) {
+        // 更新角色信息
+        updateById(role);
+        // 删除原有角色权限映射关系
+        roleMenuService.deleteRoleMenuByRoleId(role.getId());
+        insertRoleMenu(role);
+    }
+
+    @Override
+    public List<Role> selectRoleAll() {
+        return list(Wrappers.<Role>lambdaQuery().eq(Role::getStatus, SystemConstants.NORMAL));
+    }
+
+    @Override
+    public List<Long> selectRoleIdByUserId(Long userId) {
+        return getBaseMapper().selectRoleIdByUserId(userId);
+    }
+
 }
 

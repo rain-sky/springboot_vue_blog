@@ -16,21 +16,21 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/content/tag")
-@Api(tags = "管理：标签接口")
+@Api(tags = "系统-后台：标签接口")
 public class TagController {
 
     @Autowired
     private TagService tagService;
 
     @GetMapping("/list")
-    @ApiOperation("获取标签列表")
+    @ApiOperation("后台：获取标签列表")
     public ResponseResult list(Integer pageNum, Integer pageSize, TagListDto tagListDto){
         return tagService.pageTagList(pageNum,pageSize,tagListDto);
     }
 
 
     @PostMapping
-    @ApiOperation("新增标签")
+    @ApiOperation("后台：新增标签")
     public ResponseResult add(@RequestBody TagListDto tagDto){
         Tag tag = BeanCopyUtils.copyBean(tagDto, Tag.class);
         tagService.save(tag);
@@ -38,7 +38,7 @@ public class TagController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation("删除标签")
+    @ApiOperation("后台：删除标签")
     public ResponseResult deleteTagById(@PathVariable("id") Long id){
         tagService.removeById(id);
         return ResponseResult.okResult();
@@ -46,6 +46,7 @@ public class TagController {
 
 
     @GetMapping("/{id}")
+    @ApiOperation("后台：查询标签")
     //①根据标签的id来查询标签
     public ResponseResult getInfo(@PathVariable(value = "id")Long id){
         Tag tag = tagService.getById(id);
@@ -53,6 +54,7 @@ public class TagController {
     }
 
     @PutMapping
+    @ApiOperation("后台：修改标签")
     //②根据标签的id来修改标签
     public ResponseResult edit(@RequestBody EditTagDto tagDto){
         Tag tag = BeanCopyUtils.copyBean(tagDto,Tag.class);

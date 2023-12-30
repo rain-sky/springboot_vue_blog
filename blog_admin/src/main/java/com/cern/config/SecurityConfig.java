@@ -40,9 +40,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 对于登录接口 允许匿名访问
                 .antMatchers("/user/login").anonymous()
                 .antMatchers("/user/logout").authenticated()
+                .antMatchers("/swagger-ui.html#/").anonymous()
                 //.antMatchers("/content/tag/list").authenticated()
-                //.anyRequest().permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().permitAll();
+                //.anyRequest().authenticated();
 
         // 禁用默认登录处理
         http.logout().disable();
@@ -52,7 +53,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint)
                 .accessDeniedHandler(accessDeniedHandler);
-
         //允许跨域
         http.cors();
     }

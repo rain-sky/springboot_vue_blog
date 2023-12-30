@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@Api(tags = "系统：后台登录")
+@Api(tags = "系统-后台：登录接口")
 public class LoginController {
 
     @Autowired

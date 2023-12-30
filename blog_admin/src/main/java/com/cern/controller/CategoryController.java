@@ -23,7 +23,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/content/category")
-@Api(tags = "后台：分类接口")
+@Api(tags = "系统-后台：分类接口")
 public class CategoryController {
 
 
@@ -44,7 +44,7 @@ public class CategoryController {
         return ResponseResult.okResult(pageVo);
     }
 
-    //-----------------------------增加文章的分类--------------------------------------
+
     @PostMapping
     @ApiOperation("新增分类")
     public ResponseResult add(@RequestBody CategoryDto categoryDto){
@@ -52,15 +52,17 @@ public class CategoryController {
         categoryService.save(category);
         return ResponseResult.okResult();
     }
-    //-----------------------------删除文章的分类--------------------------------------
+
     @DeleteMapping(value = "/{id}")
+    @ApiOperation("后台：删除分类")
     public ResponseResult remove(@PathVariable(value = "id")Long id){
         categoryService.removeById(id);
         return ResponseResult.okResult();
     }
 
-    //-----------------------------修改文章的分类--------------------------------------
+
     @GetMapping(value = "/{id}")
+    @ApiOperation("后台：查询分类")
     //①根据分类的id来查询分类
     public ResponseResult getInfo(@PathVariable(value = "id")Long id){
         Category category = categoryService.getById(id);
@@ -68,14 +70,15 @@ public class CategoryController {
     }
 
     @PutMapping
+    @ApiOperation("后台：修改分类")
     //②根据分类的id来修改分类
     public ResponseResult edit(@RequestBody Category category){
         categoryService.updateById(category);
         return ResponseResult.okResult();
     }
 
-    //----------------------------------------分类导出-----------------------------------------
     @GetMapping("/export")
+    @ApiOperation("后台：分类导出")
     @PreAuthorize("@permissionServiceImpl.hasPermission('content:category:export')") // 使用自己鉴权方法
     //注意返回值类型是void
     public void export(HttpServletResponse response){
